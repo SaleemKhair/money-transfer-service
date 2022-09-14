@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: @application.name@
+
+server:
+  port: @server.port@
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
