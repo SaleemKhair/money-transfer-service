@@ -6,6 +6,7 @@ import org.bsf.transfers.domain.AccountView
 import org.bsf.transfers.domain.MoneyTransferModel
 import org.bsf.transfers.domain.MoneyTransferView
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class MoneyTransfersService(
@@ -13,6 +14,7 @@ class MoneyTransfersService(
     private val mTransferModelFactory: MoneyTransferModel.Factory
 ) {
 
+    @Transactional
     fun transferMoney(moneyTransfer: MoneyTransfer): MoneyTransferView {
         val sender = accountModelFactory.fromAccount(moneyTransfer.sender)
         val beneficiary = accountModelFactory.fromAccount(moneyTransfer.beneficiary)

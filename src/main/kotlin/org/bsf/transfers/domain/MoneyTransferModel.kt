@@ -11,8 +11,8 @@ import java.time.LocalDateTime
 
 class MoneyTransferModel private constructor(
     override val uuid: String,
-    override val beneficiary: Account,
-    override val sender: Account,
+    override var beneficiary: Account,
+    override var sender: Account,
     override val amount: BigDecimal,
     override val issuedAt: LocalDateTime,
     override val processedAt: LocalDateTime?,
@@ -40,6 +40,8 @@ class MoneyTransferModel private constructor(
         this.transferRepository = transferRepository
         this.accountRepository = accountRepository
         val saved = transferRepository.save(toMoneyTransferEntity())
+        this.sender = accountRepository.findAccountByIban(sender.iban).get()
+        this.beneficiary = accountRepository.findAccountByIban(beneficiary.iban).get()
         this.id = saved.id
     }
 
@@ -54,7 +56,7 @@ class MoneyTransferModel private constructor(
 
     override fun validate() {
         if (sender.balance < amount) {
-            Companion.error("Sender with iban `${sender.iban}` has insufficient balance")
+            Companion.error("Sender with iban `${sender.iban}` has insufficient balance. balance: ${sender.balance}, amount: $amount")
             throw InvalidTransfer("Sender has insufficient balance")
         }
     }
